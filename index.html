@@ -31,48 +31,81 @@
       min-height: 100vh;
     }
 
+    /* 上方導覽列 */
+    .top-nav {
+      display: flex;
+      gap: 32px;
+      padding: 20px 40px;
+      background-color: #0f0f0f;
+      border-bottom: 1px solid #222;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-item {
+      color: #888;
+      text-decoration: none;
+      font-size: 1.05rem;
+      font-weight: 500;
+      padding-bottom: 6px;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover {
+      color: #e5e5e5;
+    }
+
+    .nav-item.active {
+      color: #ffffff;
+      border-bottom: 2px solid #ffffff;
+    }
+
     .container {
       display: flex;
       max-width: 1200px;
       margin: 0 auto;
-      padding: 40px 20px;
+      padding: 30px 20px;
       gap: 40px;
-    
     }
-    
+
     /* 左側排名區塊 */
     .ranking {
       width: 320px;
       flex-shrink: 0;
-      max-height: calc(100vh - 80px);   /* 限制最大高度 */
-      overflow-y: auto;                 /* 超過就出現滾動條 */
-      padding-right: 8px;               /* 避免滾動條太貼文字 */
+      max-height: calc(100vh - 80px);
+      display: flex;
+      flex-direction: column;
     }
 
-    /* 美化一下滾動條（可選，看起來比較舒服） */
-    .ranking::-webkit-scrollbar {
-      width: 6px;
-    }
-    .ranking::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .ranking::-webkit-scrollbar-thumb {
-      background: #444;
-      border-radius: 3px;
-    }
-    .ranking::-webkit-scrollbar-thumb:hover {
-      background: #666;
-    }
-       
     .ranking h2 {
       font-size: 1.25rem;
       margin-bottom: 20px;
       color: var(--text);
       font-weight: 600;
+      flex-shrink: 0;
     }
 
     .rank-list {
       list-style: none;
+      overflow-y: auto;
+      flex: 1;
+      padding-right: 6px;
+    }
+
+    .rank-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .rank-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .rank-list::-webkit-scrollbar-thumb {
+      background: #444;
+      border-radius: 3px;
+    }
+    .rank-list::-webkit-scrollbar-thumb:hover {
+      background: #666;
     }
 
     .rank-item {
@@ -90,13 +123,11 @@
       background: #222;
     }
 
-    /* 目前被選中的項目 */
     .rank-item.active {
       background: var(--active-bg);
       outline: 1px solid #333;
     }
 
-    /* 排名號碼 */
     .rank-number {
       width: 36px;
       font-weight: 600;
@@ -104,13 +135,11 @@
       flex-shrink: 0;
     }
 
-    /* 關卡名稱 */
     .rank-name {
       flex: 1;
       font-size: 0.95rem;
     }
 
-    /* 高亮項目（目前沒用到，保留以後需要時可加 class="highlight"） */
     .rank-item.highlight {
       background: var(--highlight-bg);
       color: var(--highlight-text);
@@ -168,20 +197,26 @@
       font-size: 1rem;
     }
 
-    /* 手機版調整 */
     @media (max-width: 768px) {
       .container {
         flex-direction: column;
         padding: 20px 16px;
       }
-
       .ranking {
         width: 100%;
+        max-height: 400px;
       }
     }
   </style>
 </head>
 <body>
+
+  <!-- 上方導覽列 -->
+  <nav class="top-nav">
+    <a href="index.html" class="nav-item active">List</a>
+    <a href="leaderboard.html" class="nav-item">Leaderboard</a>
+  </nav>
+
   <div class="container">
     <!-- 左側排名 -->
     <aside class="ranking">
@@ -461,144 +496,52 @@
   </div>
 
   <script>
-  // ============================================
-  // 在這裡設定每個關卡的通關者
-  // key 要用關卡的完整名稱（跟左邊顯示的一樣）
-  // ============================================
-  const levelData = {
-    "shimmer (amplitron)": {
-      victors: ["阿茲"]
-    },
-    "The Yandere": {
-      victors: ["阿茲"]
-    },
-    "Sonic Wave Rebirth": {
-      victors: ["阿茲"]
-    },
-    "Sonic Wave": {
-      victors: ["阿茲"]
-    },
-    "Devil Vortex": {
-      victors: ["Yuii"]
-    },
-    "Killbot": {
-      victors: ["FuzzearZ"]
-    },
-    "Delta Interface": {
-      victors: ["Yuii"]          // 還沒人通關就留空陣列
-    },
-    "cloud": {
-      victors: ["阿茲"]
-    },
-    "The Hell Zone": {
-      victors: ["Mazj"]
-    },
-    "Auditory Breaker": {
-      victors: ["阿茲"]
-    },
-    "Worse Trip": {
-      victors: ["阿茲"]
-    },
-    "Athanatos": {
-      victors: ["FuzzearZ"]
-    },
-    "Blade of Justice": {
-      victors: ["阿茲", "FuzzearZ"]
-    },
-    "moment": {
-      victors: ["阿茲", "FuzzearZ"]
-    },
-    "gravity": {
-      victors: ["阿茲"]
-    },
-    "Bloodbath": {
-      victors: ["FuzzearZ", "阿茲", "Lucas70707", "Yuii"  ]
-    },
-    "Idols": {
-      victors: ["Yuii"]
-    },
-    "ECSTASY (Filqh)": {
-      victors: ["阿茲"]
-    },
-    "Dyad": {
-      victors: ["FuzzearZ"]
-    },
-    "Junk Realm": {
-      victors: ["FuzzearZ"]
-    },
-    "aftermath": {
-      victors: ["阿茲"]
-    },
-    "Audio Extraction": {
-      victors: ["Yuii"]
-    },
-    "Sky Conflux": {
-      victors: ["Yuii"]
-    },
-    "Daydream": {
-      victors: ["阿茲"]
-    },
-    "1330X": {
-      victors: ["Yuii"]
-    },
-    "4ucked Up": {
-      victors: ["FuzzearZ"]
-    },
-    "Cupid": {
-      victors: ["FuzzearZ"]
-    },
-    "NEKOTINE": {
-      victors: ["FuzzearZ"]
-    },
-    "Convulsing Light": {
-      victors: ["阿茲"]
-    },
-    "Shukufuku": {
-      victors: ["阿茲", "FuzzearZ"]
-    },
-    "Steel Terrors": {
-      victors: ["Yuii", "Aren", "FuzzearZ"]
-    },
-    "cloudscape": {
-      victors: ["阿茲"]
-    },
-    "Gaming 35": {
-      victors: ["ジユ"]
-    },
-    "Interstellar Entropy": {
-      victors: ["FuzzearZ"]
-    },
-    "SHURIMA": {
-      victors: ["FuzzearZ"]
-    },
-    "Cybersonic": {
-      victors: ["Yuii"]
-    },
-    "doradura": {
-      victors: ["阿茲"]
-    },
-    "Crowd Control": {
-      victors: ["ジユ"]
-    },
-    "Allegiance": {
-      victors: ["Yuii", "Shizu"]
-    },
-    "HyperSonic": {
-      victors: ["Yuii", "Shizu"]
-    },
-    "PixelSonic": {
-      victors: ["Yuii"]
-    },
-    "Melon River": {
-      victors: ["FuzzearZ"]
-    },
-    "NEBULA": {
-      victors: ["FuzzearZ"]
-    },
-    "Tung Tung Sahurcles": {
-      victors: ["阿茲"]
-    },
-    "Ion": {
+    const levelData = {
+      "shimmer (amplitron)": { victors: ["阿茲"] },
+      "The Yandere": { victors: ["阿茲"] },
+      "Sonic Wave Rebirth": { victors: ["阿茲"] },
+      "Sonic Wave": { victors: ["阿茲"] },
+      "Devil Vortex": { victors: ["Yuii"] },
+      "Killbot": { victors: ["FuzzearZ"] },
+      "Delta Interface": { victors: ["Yuii"] },
+      "cloud": { victors: ["阿茲"] },
+      "The Hell Zone": { victors: ["Mazj"] },
+      "Auditory Breaker": { victors: ["阿茲"] },
+      "Worse Trip": { victors: ["阿茲"] },
+      "Athanatos": { victors: ["FuzzearZ"] },
+      "Blade of Justice": { victors: ["阿茲", "FuzzearZ"] },
+      "moment": { victors: ["阿茲", "FuzzearZ"] },
+      "gravity": { victors: ["阿茲"] },
+      "Bloodbath": { victors: ["FuzzearZ", "阿茲", "Lucas70707", "Yuii"] },
+      "Idols": { victors: ["Yuii"] },
+      "ECSTASY (Filqh)": { victors: ["阿茲"] },
+      "Dyad": { victors: ["FuzzearZ"] },
+      "Junk Realm": { victors: ["FuzzearZ"] },
+      "aftermath": { victors: ["阿茲"] },
+      "Audio Extraction": { victors: ["Yuii"] },
+      "Sky Conflux": { victors: ["Yuii"] },
+      "Daydream": { victors: ["阿茲"] },
+      "1330X": { victors: ["Yuii"] },
+      "4ucked Up": { victors: ["FuzzearZ"] },
+      "Cupid": { victors: ["FuzzearZ"] },
+      "NEKOTINE": { victors: ["FuzzearZ"] },
+      "Convulsing Light": { victors: ["阿茲"] },
+      "Shukufuku": { victors: ["阿茲", "FuzzearZ"] },
+      "Steel Terrors": { victors: ["Yuii", "Aren", "FuzzearZ"] },
+      "cloudscape": { victors: ["阿茲"] },
+      "Gaming 35": { victors: ["ジユ"] },
+      "Interstellar Entropy": { victors: ["FuzzearZ"] },
+      "SHURIMA": { victors: ["FuzzearZ"] },
+      "Cybersonic": { victors: ["Yuii"] },
+      "doradura": { victors: ["阿茲"] },
+      "Crowd Control": { victors: ["ジユ"] },
+      "Allegiance": { victors: ["Yuii", "Shizu"] },
+      "HyperSonic": { victors: ["Yuii", "Shizu"] },
+      "PixelSonic": { victors: ["Yuii"] },
+      "Melon River": { victors: ["FuzzearZ"] },
+      "NEBULA": { victors: ["FuzzearZ"] },
+      "Tung Tung Sahurcles": { victors: ["阿茲"] }
+      "Ion": {
       victors: ["Kurumi"]
     },
     "Grand Eclipse": {
@@ -660,51 +603,41 @@
     },
     "rauchkammer": {
       victors: ["阿茲"]
-    },
-  };
+    };
 
-  // ============================================
-  // 下面的程式不用動
-  // ============================================
-  const rankItems = document.querySelectorAll(".rank-item");
-  const mainContent = document.getElementById("mainContent");
+    const rankItems = document.querySelectorAll(".rank-item");
+    const mainContent = document.getElementById("mainContent");
 
-  rankItems.forEach(item => {
-    item.addEventListener("click", () => {
-      // 移除所有 active
-      rankItems.forEach(i => i.classList.remove("active"));
-      // 幫目前點的加上 active
-      item.classList.add("active");
+    rankItems.forEach(item => {
+      item.addEventListener("click", () => {
+        rankItems.forEach(i => i.classList.remove("active"));
+        item.classList.add("active");
 
-      const rank = item.dataset.rank;
-      const name = item.querySelector(".rank-name").textContent;
+        const rank = item.dataset.rank;
+        const name = item.querySelector(".rank-name").textContent;
 
-      // 取得這個關卡的通關者資料
-      const data = levelData[name] || { victors: [] };
-      const victors = data.victors;
+        const data = levelData[name] || { victors: [] };
+        const victors = data.victors;
 
-      // 產生通關者列表 HTML
-      let victorsHTML = "";
-      if (victors.length === 0) {
-        victorsHTML = `<li style="color: var(--text-dim);">目前還沒有人通關</li>`;
-      } else {
-        victors.forEach((player, index) => {
-          victorsHTML += `<li>${index + 1}. ${player}</li>`;
-        });
-      }
+        let victorsHTML = "";
+        if (victors.length === 0) {
+          victorsHTML = `<li style="color: var(--text-dim);">目前還沒有人通關</li>`;
+        } else {
+          victors.forEach((player, index) => {
+            victorsHTML += `<li>${index + 1}. ${player}</li>`;
+          });
+        }
 
-      // 顯示右邊內容
-      mainContent.innerHTML = `
-        <h1 class="level-title">${name}</h1>
-        <div class="level-rank">排名 #${rank}</div>
-        
-        <div class="victors-title">通關者列表</div>
-        <ul class="victors-list">
-          ${victorsHTML}
-        </ul>
-      `;
+        mainContent.innerHTML = `
+          <h1 class="level-title">${name}</h1>
+          <div class="level-rank">排名 #${rank}</div>
+          <div class="victors-title">通關者列表</div>
+          <ul class="victors-list">
+            ${victorsHTML}
+          </ul>
+        `;
+      });
     });
-  });
-</script>
+  </script>
 </body>
 </html>

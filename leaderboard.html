@@ -11,6 +11,7 @@
       --text: #e5e5e5;
       --text-dim: #a0a0a0;
       --border: #2a2a2a;
+      --accent: #64b5f6;
     }
 
     * {
@@ -59,23 +60,73 @@
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 900px;
       margin: 0 auto;
       padding: 40px 20px;
     }
 
     h1 {
       font-size: 1.8rem;
-      margin-bottom: 24px;
+      margin-bottom: 8px;
     }
 
-    .placeholder {
+    .subtitle {
       color: var(--text-dim);
+      margin-bottom: 32px;
+      font-size: 0.95rem;
+    }
+
+    /* Leaderboard 表格 */
+    .leaderboard {
+      width: 100%;
+      border-collapse: collapse;
       background: var(--surface);
-      border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 40px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .leaderboard th {
+      text-align: left;
+      padding: 14px 18px;
+      background: #151515;
+      color: var(--text-dim);
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .leaderboard td {
+      padding: 14px 18px;
+      border-top: 1px solid #2a2a2a;
+    }
+
+    .leaderboard tr:hover td {
+      background: #222;
+    }
+
+    .rank-cell {
+      width: 70px;
+      font-weight: 600;
+      color: var(--text-dim);
+    }
+
+    .player-cell {
+      font-weight: 500;
+    }
+
+    .points-cell {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .clears-cell {
+      color: var(--text-dim);
+    }
+
+    .empty {
       text-align: center;
+      padding: 60px 20px;
+      color: var(--text-dim);
     }
   </style>
 </head>
@@ -89,10 +140,98 @@
 
   <div class="container">
     <h1>Leaderboard</h1>
-    <div class="placeholder">
-      WIP
-    </div>
+    <p class="subtitle">分數系統：#1 = 300 分 → 最後一關 = 1 分（線性分配，四捨五入）</p>
+
+    <table class="leaderboard" id="leaderboardTable">
+      <thead>
+        <tr>
+          <th>排名</th>
+          <th>玩家</th>
+          <th>總分</th>
+          <th>通關數</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody">
+        <!-- 由 JavaScript 自動生成 -->
+      </tbody>
+    </table>
   </div>
 
+  <script>
+    // ============================================
+    // 在這裡填入關卡資料（依照排名順序）
+    // 之後新增關卡只要往陣列後面加即可
+    // ============================================
+    const levels = [
+      // 範例格式（目前先留空，之後再填）：
+      // { name: "關卡名稱", victors: ["玩家A", "玩家B"] },
+      // { name: "另一個關卡", victors: ["玩家C"] },
+    ];
+
+    // ============================================
+    // 下面的計算邏輯通常不需要修改
+    // ============================================
+
+    function calculatePoints(rank, totalLevels) {
+      if (totalLevels <= 1) return 300;
+      const points = 300 - (rank - 1) * (299 / (totalLevels - 1));
+      return Math.round(points);
+    }
+
+    function generateLeaderboard() {
+      const totalLevels = levels.length;
+      const playerStats = {}; // { 玩家名稱: { points: 0, clears: 0 } }
+
+      // 計算每位玩家的分數與通關數
+      levels.forEach((level, index) => {
+        const rank = index + 1;
+        const points = calculatePoints(rank, totalLevels);
+
+        level.victors.forEach(player => {
+          if (!playerStats[player]) {
+            playerStats[player] = { points: 0, clears: 0 };
+          }
+          playerStats[player].points += points;
+          playerStats[player].clears += 1;
+        });
+      });
+
+      // 轉成陣列並排序（分數高 → 低）
+      const sortedPlayers = Object.entries(playerStats)
+        .map(([name, stats]) => ({
+          name,
+          points: stats.points,
+          clears: stats.clears
+        }))
+        .sort((a, b) => b.points - a.points || b.clears - a.clears);
+
+      // 渲染表格
+      const tbody = document.getElementById("leaderboardBody");
+
+      if (sortedPlayers.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" class="empty">
+              目前還沒有通關資料<br>
+              請在 levels 陣列中新增關卡與通關者
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = sortedPlayers.map((player, index) => `
+        <tr>
+          <td class="rank-cell">#${index + 1}</td>
+          <td class="player-cell">${player.name}</td>
+          <td class="points-cell">${player.points}</td>
+          <td class="clears-cell">${player.clears}</td>
+        </tr>
+      `).join("");
+    }
+
+    // 啟動
+    generateLeaderboard();
+  </script>
 </body>
 </html>

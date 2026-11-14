@@ -14,6 +14,7 @@
       --highlight-text: #ffffff;
       --border: #2a2a2a;
       --accent: #64b5f6;
+      --active-bg: #252525;
     }
 
     * {
@@ -62,11 +63,18 @@
       margin-bottom: 6px;
       border-radius: 8px;
       transition: background 0.2s;
-      cursor: default;
+      cursor: pointer;
+      user-select: none;
     }
 
     .rank-item:hover {
       background: #222;
+    }
+
+    /* 目前被選中的項目 */
+    .rank-item.active {
+      background: var(--active-bg);
+      outline: 1px solid #333;
     }
 
     /* 排名號碼 */
@@ -103,13 +111,42 @@
       min-height: 400px;
     }
 
-    .main-content h1 {
+    .level-title {
       font-size: 1.8rem;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
+      color: #fff;
     }
 
-    .main-content p {
+    .level-rank {
       color: var(--text-dim);
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+    }
+
+    .victors-title {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .victors-list {
+      list-style: none;
+    }
+
+    .victors-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid #2a2a2a;
+      color: var(--text);
+    }
+
+    .victors-list li:last-child {
+      border-bottom: none;
+    }
+
+    .placeholder {
+      color: var(--text-dim);
+      font-size: 1rem;
     }
 
     /* 手機版調整 */
@@ -130,54 +167,86 @@
     <!-- 左側排名 -->
     <aside class="ranking">
       <h2>shalz demonlist</h2>
-      <ul class="rank-list">
-        <li class="rank-item">
+      <ul class="rank-list" id="rankList">
+        <li class="rank-item" data-rank="1">
           <span class="rank-number">#1</span>
           <span class="rank-name">The Yandere</span>
         </li>
-        <li class="rank-item">
+        <li class="rank-item" data-rank="2">
           <span class="rank-number">#2</span>
           <span class="rank-name">Sonic Wave Rebirth</span>
         </li>
-        <li class="rank-item">
+        <li class="rank-item" data-rank="3">
           <span class="rank-number">#3</span>
           <span class="rank-name">Sonic Wave</span>
         </li>
-        <li class="rank-item">
+        <li class="rank-item" data-rank="4">
           <span class="rank-number">#4</span>
           <span class="rank-name">Devil Vortex</span>
         </li>
-        <li class="rank-item">
+        <li class="rank-item" data-rank="5">
           <span class="rank-number">#5</span>
           <span class="rank-name">Killbot</span>
         </li>
-        <li class="rank-item">
+        <li class="rank-item" data-rank="6">
           <span class="rank-number">#6</span>
           <span class="rank-name">Delta Interface</span>
         </li>
-        <li class="rank-item">
+        <li class="rank-item" data-rank="7">
           <span class="rank-number">#7</span>
           <span class="rank-name">cloud</span>
         </li>
-        <li class="rank-item">
+        <li class="rank-item" data-rank="8">
           <span class="rank-number">#8</span>
           <span class="rank-name">The Hell Zone</span>
         </li>
-        <li class="rank-item">
+        <li class="rank-item" data-rank="9">
           <span class="rank-number">#9</span>
           <span class="rank-name">Auditory Breaker</span>
         </li>
-        <li class="rank-item">
+        <li class="rank-item" data-rank="10">
           <span class="rank-number">#10</span>
           <span class="rank-name">Worse Trip</span>
         </li>
-        <li class="rank-item">
+        <li class="rank-item" data-rank="11">
           <span class="rank-number">#11</span>
           <span class="rank-name">Athanatos</span>
         </li>
       </ul>
     </aside>
 
+    <!-- 右側主要內容 -->
+    <main class="main-content" id="mainContent">
+      <p class="placeholder">請點選左邊的關卡來查看詳細資訊</p>
+    </main>
   </div>
+
+  <script>
+    const rankItems = document.querySelectorAll(".rank-item");
+    const mainContent = document.getElementById("mainContent");
+
+    rankItems.forEach(item => {
+      item.addEventListener("click", () => {
+        // 移除所有 active
+        rankItems.forEach(i => i.classList.remove("active"));
+        // 幫目前點的加上 active
+        item.classList.add("active");
+
+        const rank = item.dataset.rank;
+        const name = item.querySelector(".rank-name").textContent;
+
+        // 顯示右邊內容（通關者先放 onhold）
+        mainContent.innerHTML = `
+          <h1 class="level-title">${name}</h1>
+          <div class="level-rank">排名 #${rank}</div>
+          
+          <div class="victors-title">通關者列表</div>
+          <ul class="victors-list">
+            <li>onhold</li>
+          </ul>
+        `;
+      });
+    });
+  </script>
 </body>
 </html>

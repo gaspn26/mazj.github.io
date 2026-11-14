@@ -222,31 +222,88 @@
   </div>
 
   <script>
-    const rankItems = document.querySelectorAll(".rank-item");
-    const mainContent = document.getElementById("mainContent");
+  // ============================================
+  // 在這裡設定每個關卡的通關者
+  // key 要用關卡的完整名稱（跟左邊顯示的一樣）
+  // ============================================
+  const levelData = {
+    "The Yandere": {
+      victors: ["阿茲"]
+    },
+    "Sonic Wave Rebirth": {
+      victors: ["阿茲"]
+    },
+    "Sonic Wave": {
+      victors: ["阿茲"]
+    },
+    "Devil Vortex": {
+      victors: ["Yuii"]
+    },
+    "Killbot": {
+      victors: ["HankK漢"]
+    },
+    "Delta Interface": {
+      victors: ["Yuii"]          // 還沒人通關就留空陣列
+    },
+    "cloud": {
+      victors: ["阿茲"]
+    },
+    "The Hell Zone": {
+      victors: ["Mazj"]
+    },
+    "Auditory Breaker": {
+      victors: ["阿茲"]
+    },
+    "Worse Trip": {
+      victors: ["阿茲"]
+    },
+    "Athanatos": {
+      victors: ["HankK漢"]
+    }
+  };
 
-    rankItems.forEach(item => {
-      item.addEventListener("click", () => {
-        // 移除所有 active
-        rankItems.forEach(i => i.classList.remove("active"));
-        // 幫目前點的加上 active
-        item.classList.add("active");
+  // ============================================
+  // 下面的程式不用動
+  // ============================================
+  const rankItems = document.querySelectorAll(".rank-item");
+  const mainContent = document.getElementById("mainContent");
 
-        const rank = item.dataset.rank;
-        const name = item.querySelector(".rank-name").textContent;
+  rankItems.forEach(item => {
+    item.addEventListener("click", () => {
+      // 移除所有 active
+      rankItems.forEach(i => i.classList.remove("active"));
+      // 幫目前點的加上 active
+      item.classList.add("active");
 
-        // 顯示右邊內容（通關者先放 onhold）
-        mainContent.innerHTML = `
-          <h1 class="level-title">${name}</h1>
-          <div class="level-rank">排名 #${rank}</div>
-          
-          <div class="victors-title">通關者列表</div>
-          <ul class="victors-list">
-            <li>onhold</li>
-          </ul>
-        `;
-      });
+      const rank = item.dataset.rank;
+      const name = item.querySelector(".rank-name").textContent;
+
+      // 取得這個關卡的通關者資料
+      const data = levelData[name] || { victors: [] };
+      const victors = data.victors;
+
+      // 產生通關者列表 HTML
+      let victorsHTML = "";
+      if (victors.length === 0) {
+        victorsHTML = `<li style="color: var(--text-dim);">目前還沒有人通關</li>`;
+      } else {
+        victors.forEach((player, index) => {
+          victorsHTML += `<li>${index + 1}. ${player}</li>`;
+        });
+      }
+
+      // 顯示右邊內容
+      mainContent.innerHTML = `
+        <h1 class="level-title">${name}</h1>
+        <div class="level-rank">排名 #${rank}</div>
+        
+        <div class="victors-title">通關者列表</div>
+        <ul class="victors-list">
+          ${victorsHTML}
+        </ul>
+      `;
     });
-  </script>
+  });
+</script>
 </body>
 </html>

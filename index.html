@@ -3,26 +3,170 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>社團首頁</title>
-  <link rel="stylesheet" href="style.css">
+  <title>遊戲關卡排名</title>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --surface: #1a1a1a;
+      --text: #e5e5e5;
+      --text-dim: #a0a0a0;
+      --highlight-bg: #000000;
+      --highlight-text: #ffffff;
+      --border: #2a2a2a;
+      --accent: #64b5f6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: flex;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      gap: 40px;
+    }
+
+    /* 左側排名區塊 */
+    .ranking {
+      width: 320px;
+      flex-shrink: 0;
+    }
+
+    .ranking h2 {
+      font-size: 1.25rem;
+      margin-bottom: 20px;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .rank-list {
+      list-style: none;
+    }
+
+    .rank-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 14px;
+      margin-bottom: 6px;
+      border-radius: 8px;
+      transition: background 0.2s;
+      cursor: default;
+    }
+
+    .rank-item:hover {
+      background: #222;
+    }
+
+    /* 排名號碼 */
+    .rank-number {
+      width: 36px;
+      font-weight: 600;
+      color: var(--text-dim);
+      flex-shrink: 0;
+    }
+
+    /* 關卡名稱 */
+    .rank-name {
+      flex: 1;
+      font-size: 0.95rem;
+    }
+
+    /* 高亮項目（像圖片中的 #2） */
+    .rank-item.highlight {
+      background: var(--highlight-bg);
+      color: var(--highlight-text);
+    }
+
+    .rank-item.highlight .rank-number {
+      color: var(--highlight-text);
+    }
+
+    /* 右側內容區（之後可以放其他東西） */
+    .main-content {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px;
+      min-height: 400px;
+    }
+
+    .main-content h1 {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+
+    .main-content p {
+      color: var(--text-dim);
+    }
+
+    /* 手機版調整 */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        padding: 20px 16px;
+      }
+
+      .ranking {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>我們的社團</h1>
-    <nav>
-      <a href="index.html">首頁</a>
-      <a href="ranking.html">排行榜</a>
-    </nav>
-  </header>
+  <div class="container">
+    <!-- 左側排名 -->
+    <aside class="ranking">
+      <h2>關卡排名</h2>
+      <ul class="rank-list">
+        <li class="rank-item">
+          <span class="rank-number">#1</span>
+          <span class="rank-name">Lesopowal</span>
+        </li>
+        <li class="rank-item highlight">
+          <span class="rank-number">#2</span>
+          <span class="rank-name">SARY NEVER CLEAR (Original)</span>
+        </li>
+        <li class="rank-item">
+          <span class="rank-number">#3</span>
+          <span class="rank-name">Sukupen circles (Unnerfed)</span>
+        </li>
+        <li class="rank-item">
+          <span class="rank-number">#4</span>
+          <span class="rank-name">Herr Machine</span>
+        </li>
+        <li class="rank-item">
+          <span class="rank-number">#5</span>
+          <span class="rank-name">Old Orochi</span>
+        </li>
+        <li class="rank-item">
+          <span class="rank-number">#6</span>
+          <span class="rank-name">Azure Flare (ItsHybrid)</span>
+        </li>
+        <li class="rank-item">
+          <span class="rank-number">#7</span>
+          <span class="rank-name">SANGUINE</span>
+        </li>
+      </ul>
+    </aside>
 
-  <main>
-    <h2>歡迎加入我們的社團</h2>
-    <p>這裡是社團簡介，可以自己改成你們想說的話。</p>
-    <p>目前成員可以透過排行榜查看積分與排名。</p>
-  </main>
-
-  <footer>
-    <p>© 2026 社團名稱</p>
-  </footer>
+    <!-- 右側主要內容（之後可以放介紹或其他東西） -->
+    <main class="main-content">
+      <h1>遊戲關卡排行榜</h1>
+      <p>這裡之後可以放關卡介紹、說明或其他內容。</p>
+    </main>
+  </div>
 </body>
 </html>

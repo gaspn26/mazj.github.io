@@ -37,14 +37,33 @@
       margin: 0 auto;
       padding: 40px 20px;
       gap: 40px;
+    
     }
-
+    
     /* 左側排名區塊 */
     .ranking {
       width: 320px;
       flex-shrink: 0;
+      max-height: calc(100vh - 80px);   /* 限制最大高度 */
+      overflow-y: auto;                 /* 超過就出現滾動條 */
+      padding-right: 8px;               /* 避免滾動條太貼文字 */
     }
 
+    /* 美化一下滾動條（可選，看起來比較舒服） */
+    .ranking::-webkit-scrollbar {
+      width: 6px;
+    }
+    .ranking::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .ranking::-webkit-scrollbar-thumb {
+      background: #444;
+      border-radius: 3px;
+    }
+    .ranking::-webkit-scrollbar-thumb:hover {
+      background: #666;
+    }
+       
     .ranking h2 {
       font-size: 1.25rem;
       margin-bottom: 20px;

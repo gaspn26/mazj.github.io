@@ -23,43 +23,6 @@
       box-sizing: border-box;
     }
 
-    /* 上方導覽列 */
-    .top-nav {
-      display: flex;
-      gap: 32px;
-      padding: 20px 40px;
-      background-color: #0f0f0f;
-      border-bottom: 1px solid #222;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .nav-item {
-      color: #888;
-      text-decoration: none;
-      font-size: 1.05rem;
-      font-weight: 500;
-      padding-bottom: 6px;
-      border-bottom: 2px solid transparent;
-      transition: all 0.2s;
-    }
-
-    .nav-item:hover {
-      color: #e5e5e5;
-    }
-
-    .nav-item.active {
-      color: #ffffff;
-      border-bottom: 2px solid #ffffff;
-    }
-    
-    <!-- 上方導覽列 -->
-    <nav class="top-nav">
-      <a href="index.html" class="nav-item active">List</a>
-      <a href="leaderboard.html" class="nav-item">Leaderboard</a>
-    </nav>
-    
     body {
       background-color: var(--bg);
       color: var(--text);

@@ -56,7 +56,7 @@ const levels = [
   { name: "Cataclysm", victors: ["阿茲", "FuzzearZ", "Shizu"] },
   { name: "HeatSeeker", victors: ["FuzzearZ"] },
   { name: "Kanpai", victors: ["阿茲"] },
-  { name: "9blue", victors: ["Yuii", "FuzzearZ", "linus"] },
+  { name: "9blue", victors: ["Yuii", "FuzzearZ", "linus", "Shizu"] },
   { name: "FEEL ALIVE", victors: ["FuzzearZ", "Shizu"] },
   { name: "Azurite (Sillow)", victors: ["阿茲"] },
   { name: "Fun Friday", victors: ["FuzzearZ"] },

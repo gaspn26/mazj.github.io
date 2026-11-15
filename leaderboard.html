@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>shalz demonlist - Leaderboard</title>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --surface: #1a1a1a;
+      --text: #e5e5e5;
+      --text-dim: #a0a0a0;
+      --border: #2a2a2a;
+      --accent: #64b5f6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* 上方導覽列 */
+    .top-nav {
+      display: flex;
+      gap: 32px;
+      padding: 20px 40px;
+      background-color: #0f0f0f;
+      border-bottom: 1px solid #222;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-item {
+      color: #888;
+      text-decoration: none;
+      font-size: 1.05rem;
+      font-weight: 500;
+      padding-bottom: 6px;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover {
+      color: #e5e5e5;
+    }
+
+    .nav-item.active {
+      color: #ffffff;
+      border-bottom: 2px solid #ffffff;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--text-dim);
+      margin-bottom: 32px;
+      font-size: 0.95rem;
+    }
+
+    /* Leaderboard 表格 */
+    .leaderboard {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--surface);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .leaderboard th {
+      text-align: left;
+      padding: 14px 18px;
+      background: #151515;
+      color: var(--text-dim);
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .leaderboard td {
+      padding: 14px 18px;
+      border-top: 1px solid #2a2a2a;
+    }
+
+    .leaderboard tr {
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .leaderboard tr:hover td {
+      background: #222;
+    }
+
+    .leaderboard tr.active td {
+      background: #2a2a2a;
+    }
+
+    .rank-cell {
+      width: 70px;
+      font-weight: 600;
+      color: var(--text-dim);
+    }
+
+    .player-cell {
+      font-weight: 500;
+    }
+
+    .points-cell {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .clears-cell {
+      color: var(--text-dim);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-dim);
+    }
+
+    /* 玩家通關詳情 */
+    .player-detail {
+      margin-top: 30px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      display: none;
+    }
+
+    .player-detail.show {
+      display: block;
+    }
+
+    .player-detail h2 {
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+    }
+
+    .player-detail .detail-sub {
+      color: var(--text-dim);
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+    }
+
+    .cleared-list {
+      list-style: none;
+    }
+
+    .cleared-list li {
+      padding: 10px 0;
+      border-bottom: 1px solid #2a2a2a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cleared-list li:last-child {
+      border-bottom: none;
+    }
+
+    .cleared-rank {
+      color: var(--text-dim);
+      width: 50px;
+      flex-shrink: 0;
+    }
+
+    .cleared-name {
+      flex: 1;
+    }
+
+    .cleared-points {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 上方導覽列 -->
+  <nav class="top-nav">
+    <a href="index.html" class="nav-item">List</a>
+    <a href="leaderboard.html" class="nav-item active">Leaderboard</a>
+  </nav>
+
+  <div class="container">
+    <h1>Leaderboard</h1>
+    <p class="subtitle">分數系統：#1 = 300 分 → 最後一關 = 1 分（線性分配，四捨五入）</p>
+
+    <table class="leaderboard" id="leaderboardTable">
+      <thead>
+        <tr>
+          <th>排名</th>
+          <th>玩家</th>
+          <th>總分</th>
+          <th>通關數</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody">
+        <!-- 由 JavaScript 自動生成 -->
+      </tbody>
+    </table>
+
+    <!-- 點擊玩家後顯示的詳情 -->
+    <div class="player-detail" id="playerDetail">
+      <h2 id="detailTitle">玩家通關列表</h2>
+      <p class="detail-sub" id="detailSub"></p>
+      <ul class="cleared-list" id="clearedList"></ul>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // 在這裡填入關卡資料（依照排名順序）
+    // ============================================
+    const levels = [
+         { name: "shimmer (amplitron)", victors: ["阿茲"] },
+         { name: "The Yandere", victors: ["阿茲"] },
+         { name: "Sonic Wave Rebirth", victors: ["阿茲"] },
+         { name: "Sonic Wave", victors: ["阿茲"] },
+         { name: "Devil Vortex", victors: ["Yuii"] },
+         { name: "Killbot", victors: ["FuzzearZ"] },
+         { name: "Delta Interface", victors: ["Yuii"] },
+         { name: "cloud", victors: ["阿茲"] },
+         { name: "The Hell Zone", victors: ["Mazj"] },
+         { name: "Auditory Breaker", victors: ["阿茲"] },
+         { name: "Worse Trip", victors: ["阿茲"] },
+         { name: "Athanatos", victors: ["FuzzearZ"] },
+         { name: "Blade of Justice", victors: ["阿茲", "FuzzearZ"] },
+         { name: "moment", victors: ["阿茲", "FuzzearZ"] },
+         { name: "gravity", victors: ["阿茲"] },
+         { name: "Bloodbath", victors: ["FuzzearZ", "阿茲", "Lucas70707", "Yuii"] },
+         { name: "Idols", victors: ["Yuii"] },
+         { name: "ECSTASY (Filqh)", victors: ["阿茲"] },
+         { name: "cloud", victors: ["阿茲"] },
+         { name: "Dyad", victors: ["FuzzearZ"] },
+         { name: "Junk Realm", victors: ["FuzzearZ"] },
+         { name: "aftermath", victors: ["阿茲"] },
+         { name: "Audio Extraction", victors: ["Yuii"] },
+         { name: "Sky Conflux", victors: ["Yuii"] },
+         { name: "Daydream", victors: ["阿茲"] },
+         { name: "1330X", victors: ["Yuii"] },
+         { name: "4ucked Up", victors: ["FuzzearZ"] },
+         { name: "Cupid", victors: ["FuzzearZ"] },
+         { name: "NEKOTINE", victors: ["FuzzearZ"] },
+         { name: "Convulsing Light", victors: ["阿茲"] },
+         { name: "Shukufuku", victors: ["阿茲", "FuzzearZ"] },
+         { name: "Steel Terrors", victors: ["Yuii", "Aren", "FuzzearZ"] },
+         { name: "cloudscape", victors: ["阿茲"] },
+         { name: "Gaming 35", victors: ["ジユ"] },
+         { name: "Interstellar Entropy", victors: ["FuzzearZ"] },
+         { name: "SHURIMA", victors: ["FuzzearZ"] },
+         { name: "Cybersonic", victors: ["Yuii"] },
+         { name: "doradura", victors: ["阿茲"] },
+         { name: "Crowd Control", victors: ["ジユ"] },
+         { name: "Allegiance", victors: ["Yuii", "Shizu"] },
+         { name: "HyperSonic", victors: ["Yuii", "Shizu"] },
+         { name: "PixelSonic", victors: ["Yuii"] },
+         { name: "Melon River", victors: ["FuzzearZ"] },
+         { name: "NEBULA", victors: ["FuzzearZ"] },
+         { name: "Tung Tung Sahurcles", victors: ["阿茲"] },
+         { name: "Ion", victors: ["Kurumi"] },
+         { name: "Grand Eclipse", victors: ["FuzzearZ"] },
+         { name: "Anya III", victors: ["FuzzearZ"] },
+         { name: "Tech X", victors: ["FuzzearZ"] },
+         { name: "Cataclysm", victors: ["阿茲", "FuzzearZ", "Shizu"] },
+         { name: "HeatSeeker", victors: ["FuzzearZ"] },
+         { name: "Kanpai", victors: ["阿茲"] },
+         { name: "9blue", victors: ["Yuii", "FuzzearZ", "liunx"] },
+         { name: "FEEL ALIVE", victors: ["FuzzearZ", "Shizu"] },
+         { name: "Azurite (Sillow)", victors: ["阿茲"] },
+         { name: "Fun Friday", victors: ["FuzzearZ"] },
+         { name: "Mizureta", victors: ["阿茲", "Yuii", "FuzzearZ", "ジユ"] },
+         { name: "niwa", victors: ["阿茲", "FuzzearZ", "ジユ", "Shizu"] },
+         { name: "Without U", victors: ["Aren", "Shizu", "FuzzearZ"] },
+         { name: "Prismatic", victors: ["FuzzearZ"] },
+         { name: "i want ya", victors: ["FuzzearZ"] },
+         { name: "the super hotdog", victors: ["Lucas70707"] },
+         { name: "Sweater Weather", victors: ["FuzzearZ", "阿茲"] },
+         { name: "Acu", victors: ["阿茲", "Yuii", "FuzzearZ", "Lucas70707", "Shizu", "ジユ", "eta"] },
+         { name: "Through The Decay", victors: ["Lucas70707", "Shizu", "ジユ"] },
+         { name: "rauchkammer", victors: ["阿茲"] },
+    ];
+
+    // ============================================
+    // 計算邏輯
+    // ============================================
+    function calculatePoints(rank, totalLevels) {
+      if (totalLevels <= 1) return 300;
+
+      const exponent = (totalLevels - rank) / (totalLevels - 1);
+      const points = Math.pow(300, exponent);
+
+      return Math.round(points * 10) / 10;
+    }
+
+    function generateLeaderboard() {
+      const totalLevels = levels.length;
+      const playerStats = {};
+
+      // 先收集每位玩家的資料 + 通關過的關卡
+      levels.forEach((level, index) => {
+        const rank = index + 1;
+        const points = calculatePoints(rank, totalLevels);
+
+        level.victors.forEach(player => {
+          if (!playerStats[player]) {
+            playerStats[player] = {
+              points: 0,
+              clears: 0,
+              levels: []          // 記錄通關的關卡
+            };
+          }
+          // 每次累加後再次四捨五入到小數點第一位，避免小數相加產生浮點誤差
+          playerStats[player].points = Math.round((playerStats[player].points + points) * 10) / 10;
+          playerStats[player].clears += 1;
+          playerStats[player].levels.push({
+            rank: rank,
+            name: level.name,
+            points: points
+          });
+        });
+      });
+
+      // 排序
+      const sortedPlayers = Object.entries(playerStats)
+        .map(([name, stats]) => ({
+          name,
+          points: stats.points,
+          clears: stats.clears,
+          levels: stats.levels.sort((a, b) => a.rank - b.rank) // 由高到低
+        }))
+        .sort((a, b) => b.points - a.points || b.clears - a.clears);
+
+      const tbody = document.getElementById("leaderboardBody");
+      const detailBox = document.getElementById("playerDetail");
+
+      if (sortedPlayers.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" class="empty">
+              目前還沒有通關資料<br>
+              請在 levels 陣列中新增關卡與通關者
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = sortedPlayers.map((player, index) => `
+        <tr data-player="${player.name}">
+          <td class="rank-cell">#${index + 1}</td>
+          <td class="player-cell">${player.name}</td>
+          <td class="points-cell">${player.points}</td>
+          <td class="clears-cell">${player.clears}</td>
+        </tr>
+      `).join("");
+
+      // 綁定點擊事件
+      document.querySelectorAll("#leaderboardBody tr").forEach(row => {
+        row.addEventListener("click", () => {
+          // 移除其他 active
+          document.querySelectorAll("#leaderboardBody tr").forEach(r => r.classList.remove("active"));
+          row.classList.add("active");
+
+          const playerName = row.dataset.player;
+          const player = sortedPlayers.find(p => p.name === playerName);
+
+          // 顯示詳情
+          document.getElementById("detailTitle").textContent = playerName + " 的通關列表";
+          document.getElementById("detailSub").textContent = `總分 ${player.points}　・　通關 ${player.clears} 關`;
+
+          const list = document.getElementById("clearedList");
+          list.innerHTML = player.levels.map(lv => `
+            <li>
+              <span class="cleared-rank">#${lv.rank}</span>
+              <span class="cleared-name">${lv.name}</span>
+              <span class="cleared-points">${lv.points} 分</span>
+            </li>
+          `).join("");
+
+          detailBox.classList.add("show");
+        });
+      });
+    }
+
+    generateLeaderboard();
+  </script>
+</body>
+</html>

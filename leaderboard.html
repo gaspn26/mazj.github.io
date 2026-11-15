@@ -28,7 +28,6 @@
       min-height: 100vh;
     }
 
-    /* 上方導覽列 */
     .top-nav {
       display: flex;
       gap: 32px;
@@ -76,7 +75,6 @@
       font-size: 0.95rem;
     }
 
-    /* Leaderboard 表格 */
     .leaderboard {
       width: 100%;
       border-collapse: collapse;
@@ -138,7 +136,6 @@
       color: var(--text-dim);
     }
 
-    /* 玩家通關詳情 */
     .player-detail {
       margin-top: 30px;
       background: var(--surface);
@@ -197,7 +194,6 @@
 </head>
 <body>
 
-  <!-- 上方導覽列 -->
   <nav class="top-nav">
     <a href="index.html" class="nav-item">List</a>
     <a href="leaderboard.html" class="nav-item active">Leaderboard</a>
@@ -217,11 +213,10 @@
         </tr>
       </thead>
       <tbody id="leaderboardBody">
-        <!-- 由 JavaScript 自動生成 -->
+        <!-- 自動由 JavaScript 生成 -->
       </tbody>
     </table>
 
-    <!-- 點擊玩家後顯示的詳情 -->
     <div class="player-detail" id="playerDetail">
       <h2 id="detailTitle">玩家通關列表</h2>
       <p class="detail-sub" id="detailSub"></p>
@@ -229,14 +224,13 @@
     </div>
   </div>
 
-  <!-- 引入共用的關卡資料與計分邏輯 -->
+  <!-- 引入共用資料檔案 -->
   <script src="data.js"></script>
   <script>
     function generateLeaderboard() {
       const totalLevels = levels.length;
       const playerStats = {};
 
-      // 先收集每位玩家的資料 + 通關過的關卡
       levels.forEach((level, index) => {
         const rank = index + 1;
         const points = calculatePoints(rank, totalLevels);
@@ -246,10 +240,9 @@
             playerStats[player] = {
               points: 0,
               clears: 0,
-              levels: []          // 記錄通關的關卡
+              levels: []
             };
           }
-          // 每次累加後再次四捨五入到小數點第一位，避免小數相加產生浮點誤差
           playerStats[player].points = Math.round((playerStats[player].points + points) * 10) / 10;
           playerStats[player].clears += 1;
           playerStats[player].levels.push({
@@ -260,13 +253,12 @@
         });
       });
 
-      // 排序
       const sortedPlayers = Object.entries(playerStats)
         .map(([name, stats]) => ({
           name,
           points: stats.points,
           clears: stats.clears,
-          levels: stats.levels.sort((a, b) => a.rank - b.rank) // 由高到低
+          levels: stats.levels.sort((a, b) => a.rank - b.rank)
         }))
         .sort((a, b) => b.points - a.points || b.clears - a.clears);
 
@@ -277,8 +269,7 @@
         tbody.innerHTML = `
           <tr>
             <td colspan="4" class="empty">
-              目前還沒有通關資料<br>
-              請在 data.js 的 levels 陣列中新增關卡與通關者
+              目前還沒有通關資料
             </td>
           </tr>
         `;
@@ -294,19 +285,16 @@
         </tr>
       `).join("");
 
-      // 綁定點擊事件
       document.querySelectorAll("#leaderboardBody tr").forEach(row => {
         row.addEventListener("click", () => {
-          // 移除其他 active
           document.querySelectorAll("#leaderboardBody tr").forEach(r => r.classList.remove("active"));
           row.classList.add("active");
 
           const playerName = row.dataset.player;
           const player = sortedPlayers.find(p => p.name === playerName);
 
-          // 顯示詳情
           document.getElementById("detailTitle").textContent = playerName + " 的通關列表";
-          document.getElementById("detailSub").textContent = `總分 ${player.points}　・　通關 ${player.clears} 關`;
+          document.getElementById("detailSub").textContent = `總分 ${player.points} ・ 通關 ${player.clears} 關`;
 
           const list = document.getElementById("clearedList");
           list.innerHTML = player.levels.map(lv => `

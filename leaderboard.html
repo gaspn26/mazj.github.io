@@ -313,6 +313,7 @@
       const points = Math.pow(300, exponent);
 
       // 修正浮點數誤差並保留到小數點後第一位（回傳結果為 Number）
+      console.log(typeof result, result);
       return Number(points.toFixed(1));
     }
 

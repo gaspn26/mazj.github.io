@@ -37,6 +37,7 @@ const levels = [
   { name: "Steel Terrors", victors: ["Yuii", "Aren", "FuzzearZ"] },
   { name: "cloudscape", victors: ["阿茲"] },
   { name: "Gaming 35", victors: ["ジユ"] },
+  { name: "Broken Signal", victors: ["Shizu"] },
   { name: "Interstellar Entropy", victors: ["FuzzearZ"] },
   { name: "SHURIMA", victors: ["FuzzearZ"] },
   { name: "Cybersonic", victors: ["Yuii"] },

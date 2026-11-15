@@ -312,8 +312,8 @@
       const exponent = (totalLevels - rank) / (totalLevels - 1);
       const points = Math.pow(300, exponent);
 
-      // 四捨五入到小數點後第一位 (0.1, 0.2 ...)
-      return Math.round((points + Number.EPSILON) * 10) / 10;
+      // 修正浮點數誤差並保留到小數點後第一位（回傳結果為 Number）
+      return Number(points.toFixed(1));
     }
 
     function generateLeaderboard() {

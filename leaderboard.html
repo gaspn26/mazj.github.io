@@ -205,7 +205,7 @@
 
   <div class="container">
     <h1>Leaderboard</h1>
-    <p class="subtitle">分數系統：#1 = 300 分 → 最後一關 = 1 分（線性分配，四捨五入）</p>
+    <p class="subtitle">分數系統：f(x) = 300 ^ ((l - x) / (l - 1))（指數分配，四捨五入到小數）</p>
 
     <table class="leaderboard" id="leaderboardTable">
       <thead>

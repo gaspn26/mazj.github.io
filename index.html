@@ -31,7 +31,6 @@
       min-height: 100vh;
     }
 
-    /* 上方導覽列 */
     .top-nav {
       display: flex;
       gap: 32px;
@@ -70,7 +69,6 @@
       gap: 40px;
     }
 
-    /* 左側排名區塊 */
     .ranking {
       width: 340px;
       flex-shrink: 0;
@@ -151,16 +149,6 @@
       font-variant-numeric: tabular-nums;
     }
 
-    .rank-item.highlight {
-      background: var(--highlight-bg);
-      color: var(--highlight-text);
-    }
-
-    .rank-item.highlight .rank-number {
-      color: var(--highlight-text);
-    }
-
-    /* 右側內容區 */
     .main-content {
       flex: 1;
       background: var(--surface);
@@ -222,64 +210,61 @@
 </head>
 <body>
 
-  <!-- 上方導覽列 -->
   <nav class="top-nav">
     <a href="index.html" class="nav-item active">List</a>
     <a href="leaderboard.html" class="nav-item">Leaderboard</a>
   </nav>
 
   <div class="container">
-    <!-- 左側排名 -->
     <aside class="ranking">
       <h2>shalz demonlist</h2>
       <ul class="rank-list" id="rankList">
-        <!-- 由 data.js 與下方腳本自動生成，新增關卡會自動順延排名與分數 -->
+        <!-- 自動由 JavaScript 生成 -->
       </ul>
     </aside>
 
-    <!-- 右側主要內容 -->
     <main class="main-content" id="mainContent">
       <p class="placeholder">Welcome to shalz demonlist</p>
     </main>
   </div>
 
-  <!-- 引入共用的關卡資料與計分邏輯 -->
+  <!-- 引入共用資料檔案 -->
   <script src="data.js"></script>
   <script>
     const rankList = document.getElementById("rankList");
     const mainContent = document.getElementById("mainContent");
     const totalLevels = levels.length;
 
-    // 動態生成左側所有關卡列表
+    // 自動生成左側選單
     levels.forEach((level, index) => {
       const rank = index + 1;
       const points = calculatePoints(rank, totalLevels);
 
-      const item = document.createElement("li");
-      item.className = "rank-item";
-      item.innerHTML = `
+      const li = document.createElement("li");
+      li.className = "rank-item";
+      li.innerHTML = `
         <span class="rank-number">#${rank}</span>
         <span class="rank-name">${level.name}</span>
         <span class="rank-points">${points} 分</span>
       `;
 
-      item.addEventListener("click", () => {
+      li.addEventListener("click", () => {
         document.querySelectorAll(".rank-item").forEach(i => i.classList.remove("active"));
-        item.classList.add("active");
+        li.classList.add("active");
 
         const victors = level.victors || [];
         let victorsHTML = "";
         if (victors.length === 0) {
           victorsHTML = `<li style="color: var(--text-dim);">目前還沒有人通關</li>`;
         } else {
-          victors.forEach((player, idx) => {
-            victorsHTML += `<li>${idx + 1}. ${player}</li>`;
+          victors.forEach((player, pIdx) => {
+            victorsHTML += `<li>${pIdx + 1}. ${player}</li>`;
           });
         }
 
         mainContent.innerHTML = `
           <h1 class="level-title">${level.name}</h1>
-          <div class="level-rank">排名 #${rank}　・　${points} 分</div>
+          <div class="level-rank">排名 #${rank} ・ ${points} 分</div>
           <div class="victors-title">通關者列表</div>
           <ul class="victors-list">
             ${victorsHTML}
@@ -287,7 +272,7 @@
         `;
       });
 
-      rankList.appendChild(item);
+      rankList.appendChild(li);
     });
   </script>
 </body>

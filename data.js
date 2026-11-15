@@ -19,7 +19,7 @@ const levels = [
   { name: "Blade of Justice", victors: ["阿茲", "FuzzearZ"] },
   { name: "moment", victors: ["阿茲", "FuzzearZ"] },
   { name: "gravity", victors: ["阿茲"] },
-  { name: "Bloodbath", victors: ["FuzzearZ", "阿茲", "Lucas70707", "Yuii"] },
+  { name: "Bloodbath", victors: ["FuzzearZ", "阿茲", "Lucas70707", "Yuii", "Benson"] },
   { name: "Idols", victors: ["Yuii"] },
   { name: "ECSTASY (Filqh)", victors: ["阿茲"] },
   { name: "Dyad", victors: ["FuzzearZ"] },

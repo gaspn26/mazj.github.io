@@ -72,7 +72,7 @@
 
     /* 左側排名區塊 */
     .ranking {
-      width: 320px;
+      width: 340px;
       flex-shrink: 0;
       max-height: calc(100vh - 80px);
       display: flex;
@@ -117,6 +117,7 @@
       transition: background 0.2s;
       cursor: pointer;
       user-select: none;
+      gap: 8px;
     }
 
     .rank-item:hover {
@@ -138,6 +139,16 @@
     .rank-name {
       flex: 1;
       font-size: 0.95rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .rank-points {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
     }
 
     .rank-item.highlight {
@@ -564,15 +575,34 @@
       "rauchkammer": { victors: ["阿茲"] },
     };
 
+    // 與 Leaderboard 相同的計分邏輯
+    function calculatePoints(rank, totalLevels) {
+      if (totalLevels <= 1) return 300;
+
+      const exponent = (totalLevels - rank) / (totalLevels - 1);
+      const points = Math.pow(300, exponent);
+
+      return Math.round(points * 10) / 10;
+    }
+
     const rankItems = document.querySelectorAll(".rank-item");
     const mainContent = document.getElementById("mainContent");
+    const totalLevels = rankItems.length;
 
     rankItems.forEach(item => {
+      const rank = Number(item.dataset.rank);
+      const points = calculatePoints(rank, totalLevels);
+
+      // 在左側列表每個關卡的右邊動態加上 List Points
+      const pointsSpan = document.createElement("span");
+      pointsSpan.className = "rank-points";
+      pointsSpan.textContent = `${points} 分`;
+      item.appendChild(pointsSpan);
+
       item.addEventListener("click", () => {
         rankItems.forEach(i => i.classList.remove("active"));
         item.classList.add("active");
 
-        const rank = item.dataset.rank;
         const name = item.querySelector(".rank-name").textContent;
 
         const data = levelData[name] || { victors: [] };
@@ -589,7 +619,7 @@
 
         mainContent.innerHTML = `
           <h1 class="level-title">${name}</h1>
-          <div class="level-rank">排名 #${rank}</div>
+          <div class="level-rank">排名 #${rank}　・　${points} 分</div>
           <div class="victors-title">通關者列表</div>
           <ul class="victors-list">
             ${victorsHTML}

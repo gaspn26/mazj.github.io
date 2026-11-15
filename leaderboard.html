@@ -312,6 +312,7 @@
       const exponent = (totalLevels - rank) / (totalLevels - 1);
       const points = Math.pow(300, exponent);
 
+      return Math.round(points); // 四捨五入成整數
     }
 
     function generateLeaderboard() {

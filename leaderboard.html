@@ -308,13 +308,17 @@
     function calculatePoints(rank, totalLevels) {
       if (totalLevels <= 1) return 300;
 
-      // f(x) = 300 ^ ((l - x) / (l - 1))
       const exponent = (totalLevels - rank) / (totalLevels - 1);
       const points = Math.pow(300, exponent);
 
-      // 修正浮點數誤差並保留到小數點後第一位（回傳結果為 Number）
+      // 1. 先把計算並四捨五入後的值存進變數
+      const result = Math.round(points * 10) / 10;
+
+      // 2. 加在這裡：印出它的「型別」跟「數值」
       console.log(typeof result, result);
-      return Number(points.toFixed(1));
+
+      // 3. 回傳結果
+      return result;
     }
 
     function generateLeaderboard() {

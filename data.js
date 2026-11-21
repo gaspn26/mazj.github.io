@@ -64,7 +64,7 @@ const levels = [
   { name: "Sephtis", victors: ["Shizu"] },
   { name: "Mystic Bounds", victors: ["Shizu"] },
   { name: "Mizureta", victors: ["阿茲", "Yuii", "FuzzearZ", "ジユ", "Shizu"] },
-  { name: "niwa", victors: ["阿茲", "FuzzearZ", "ジユ", "Shizu", "鬆餅會爆炸"] },
+  { name: "niwa", victors: ["阿茲", "FuzzearZ", "ジユ", "Shizu", "鬆餅會爆炸", "eta"] },
   { name: "Without U", victors: ["Aren", "FuzzearZ", "Shizu"] },
   { name: "Prismatic", victors: ["FuzzearZ"] },
   { name: "i want ya", victors: ["FuzzearZ"] },
